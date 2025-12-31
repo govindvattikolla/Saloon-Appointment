@@ -28,7 +28,7 @@
         .header {
             padding: 10px 25px;
             text-align: center;
-            background: #000000; /* single accent color */
+            background: #000000 !important; /* single accent color */
             color: white;
         }
 
