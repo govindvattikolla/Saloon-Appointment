@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fringe Salon - Book Your Appointment</title>
+    <link rel="stylesheet" href="./styles.css">
+  
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💇 Fringe Salon</h1>
+            <p>Book Your Perfect Look</p>
+        </div>
+
+        <div class="form-container">
+            <div class="success-message" id="successMessage" style="display:none">
+                <h3>✨ Booking Confirmed!</h3>
+                <p>We'll see you soon at Fringe Salon</p>
+            </div>
+
+           <form id="bookingForm">
+                <div class="form-group">
+                    <label for="fullName">Full Name <span class="required">*</span></label>
+                    <input 
+                        type="text" 
+                        id="fullName" 
+                        name="fullName" 
+                        class="form-control" 
+                        placeholder="Enter your full name"
+                        required
+                    >
+                    <div class="error-message" id="nameError">Please enter your full name</div>
+                </div>
+
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number <span class="required">*</span></label>
+                    <div class="">
+                        <input 
+                            type="tel" 
+                            id="phone" 
+                            name="phone" 
+                            class="form-control" 
+                            placeholder="Enter your phone number"
+                            required
+                        >
+                    </div>
+                    <div class="error-message" id="phoneError">Please enter a valid phone number</div>
+                </div>
+
+              
+                <div class="form-group">
+                    <label for="email">Email Address <span class="required">*</span></label>
+                    <div class="">
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="form-control" 
+                            placeholder="Enter your email"
+                            required
+                        >
+                    </div>
+                    <div class="error-message" id="emailError">Please enter a valid email address</div>
+                </div>
+
+           
+                <div class="form-group">
+                    <label>Gender <span class="required">*</span></label>
+                    <div class="gender-options">
+                        <div class="gender-option">
+                            <input type="radio" id="male" name="gender" value="male" required>
+                            <label for="male">👨 Male</label>
+                        </div>
+                        <div class="gender-option">
+                            <input type="radio" id="female" name="gender" value="female">
+                            <label for="female">👩 Female</label>
+                        </div>
+                        <div class="gender-option">
+                            <input type="radio" id="other" name="gender" value="other">
+                            <label for="other">🧑 Other</label>
+                        </div>
+                    </div>
+                    <div class="error-message" id="genderError">Please select your gender</div>
+                </div>
+
+              
+                <div class="form-group">
+                    <label for="date">Preferred Date <span class="required">*</span></label>
+                    <div class="input-icon calendar-icon">
+                        <input 
+                            type="date" 
+                            id="date" 
+                            name="date" 
+                            class="form-control"
+                            required
+                        >
+                    </div>
+                    <div class="error-message" id="dateError">Please select a date</div>
+                </div>
+
+                <!-- Time -->
+                <div class="form-group">
+    <label for="preferredTime">
+        Preferred Time <span class="required">*</span>
+    </label>
+
+    <select id="preferredTime" name="time" required>
+        <option value="">-- Select a time --</option>
+        <option value="09:00 AM">09:00 AM</option>
+    
+        <option value="10:00 AM">10:00 AM</option>
+        <option value="11:00 AM">11:00 AM</option>
+        <option value="12:00 PM">12:00 PM</option>
+        <option value="02:00 PM">02:00 PM</option>
+        <option value="03:00 PM">03:00 PM</option>
+        <option value="04:00 PM">04:00 PM</option>
+        <option value="05:00 PM">05:00 PM</option>
+        <option value="06:00 PM">06:00 PM</option>
+    </select>
+
+    <div class="error-message" id="timeError">
+        Please select a time slot
+    </div>
+</div>
+
+
+                <button type="submit" class="submit-btn">Book Appointment </button>
+            </form>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+   <script>
+/* ---------------------------
+   EMAILJS INIT
+---------------------------- */
+(function () {
+    emailjs.init("FqcvSupKOsqkM-Qet"); // 🔑 Replace with your EmailJS Public Key
+})();
+
+/* ---------------------------
+   DATE: Disable past dates
+---------------------------- */
+const dateInput = document.getElementById('date');
+const today = new Date().toISOString().split('T')[0];
+dateInput.setAttribute('min', today);
+
+const form = document.getElementById('bookingForm');
+const successMessage = document.getElementById('successMessage');
+
+form.addEventListener('submit', function (e) {
+    e.preventDefault(); 
+
+    
+    document.querySelectorAll('.error-message').forEach(error => {
+        error.style.display = 'none';
+    });
+
+    let isValid = true;
+
+    const fullName = document.getElementById('fullName').value.trim();
+    if (fullName.length < 2) {
+        document.getElementById('nameError').style.display = 'block';
+        isValid = false;
+    }
+
+    const phone = document.getElementById('phone').value.trim();
+    if (!/^[0-9]{10}$/.test(phone)) {
+        document.getElementById('phoneError').style.display = 'block';
+        isValid = false;
+    }
+
+    const email = document.getElementById('email').value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        document.getElementById('emailError').style.display = 'block';
+        isValid = false;
+    }
+
+    const gender = document.querySelector('input[name="gender"]:checked');
+    if (!gender) {
+        document.getElementById('genderError').style.display = 'block';
+        isValid = false;
+    }
+
+    const date = document.getElementById('date').value;
+    if (!date) {
+        document.getElementById('dateError').style.display = 'block';
+        isValid = false;
+    }
+
+    const time = document.getElementById('preferredTime').value;
+    if (!time) {
+        document.getElementById('timeError').style.display = 'block';
+        isValid = false;
+    }
+
+    if (!isValid) return;
+
+    /* ---------------------------
+       SEND EMAIL WITH EMAILJS
+    ---------------------------- */
+    emailjs.sendForm(
+        "service_5g1orbf",   // 📩 EmailJS Service ID
+        "template_3rkd6ch",  // 🧾 EmailJS Template ID
+        form
+    ).then(
+        function () {
+            successMessage.style.display = 'block';
+            form.reset();
+
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 5000);
+        },
+        function (error) {
+            alert("Failed to send booking. Please try again.");
+            console.error("EmailJS Error:", error);
+        }
+    );
+});
+
+/* ---------------------------
+   INPUT HELPERS
+---------------------------- */
+document.getElementById('phone').addEventListener('input', function () {
+    this.value = this.value.replace(/[^0-9]/g, '');
+});
+
+document.querySelectorAll('.form-control').forEach(input => {
+    input.addEventListener('focus', function () {
+        this.parentElement.style.transform = 'scale(1.01)';
+    });
+
+    input.addEventListener('blur', function () {
+        this.parentElement.style.transform = 'scale(1)';
+    });
+});
+</script>
+
+
+</body>
+</html>
